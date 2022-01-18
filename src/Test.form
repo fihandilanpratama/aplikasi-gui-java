@@ -53,7 +53,11 @@
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <model>
+                <item value="-pilih-"/>
+              </model>
+            </properties>
           </component>
           <component id="b7588" class="javax.swing.JLabel" binding="keteranganLabel">
             <constraints>
@@ -67,7 +71,14 @@
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <model>
+                <item value="-pilih-"/>
+                <item value="hadir"/>
+                <item value="alpha"/>
+                <item value="izin"/>
+              </model>
+            </properties>
           </component>
           <component id="d1c" class="javax.swing.JLabel" binding="pertemuanLabel">
             <constraints>
@@ -81,7 +92,19 @@
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <model>
+                <item value="-pilih-"/>
+                <item value="1"/>
+                <item value="2"/>
+                <item value="3"/>
+                <item value="4"/>
+                <item value="5"/>
+                <item value="6"/>
+                <item value="7"/>
+                <item value="8"/>
+              </model>
+            </properties>
           </component>
           <component id="530b2" class="javax.swing.JButton" binding="button2" default-binding="true">
             <constraints>
