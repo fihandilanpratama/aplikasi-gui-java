@@ -28,12 +28,13 @@ public class MainUI extends JFrame{
   private JTable tableDataAbsensi;
   private JButton buttonHapus;
   private JButton resetButton;
-  private JButton button3;
   private JPanel rekapitulasiPanel;
-  private JButton button1;
-  private JButton button2;
-  private JButton button4;
   private JTextField idField;
+  private JComboBox comboBoxNamaRekap;
+  private JButton rekapButton;
+  private JTable tableRekapitulasi;
+  private JComboBox comboBoxJenisRekap;
+  private JComboBox comboBox1;
 
   private boolean databaru;
   private final Koneksi koneksi = new Koneksi();
@@ -75,7 +76,8 @@ public class MainUI extends JFrame{
 
   // constructor
   public MainUI() {
-
+    createTableAbsensi();
+    createTableRekapitulasi();
 
     // event ketika pilih nama
     namaField.addActionListener(new ActionListener() {
@@ -85,7 +87,6 @@ public class MainUI extends JFrame{
         generateComboboxMK();
       }
     });
-    createTable();
 
     // event tombol reset
     resetButton.addActionListener(new ActionListener() {
@@ -157,7 +158,7 @@ public class MainUI extends JFrame{
             // tampilkan pesan jika berhasi insert data
             JOptionPane.showMessageDialog(null, "data gagal disimpan" + e);
           }
-          createTable();
+          createTableAbsensi();
         }
 
         // jika tidak ada data baru (update/edit)
@@ -185,7 +186,7 @@ public class MainUI extends JFrame{
             // tampilkan pesan jika berhasi insert data
             JOptionPane.showMessageDialog(null, "data gagal diedit" + e);
           }
-          createTable();
+          createTableAbsensi();
         }
       }
     });
@@ -206,7 +207,7 @@ public class MainUI extends JFrame{
           JOptionPane.showMessageDialog(null, "data gagal dihapus" + e);
         }
         regenerateAllCombobox();  // reset form
-        createTable(); // update data di tabel
+        createTableAbsensi(); // update data di tabel
       }
     });
   }
@@ -235,8 +236,7 @@ public class MainUI extends JFrame{
     pertemuanField.setModel(new DefaultComboBoxModel(itemPertemuan));
   }
 
-
-  private void createTable() {
+  private void createTableAbsensi() {
 //    Object[][] data = {
 //            {123, "joni", "fisika", 1, "hadir"},
 //            {234, "budi", "PBO", 1, "alpha"},
@@ -255,7 +255,25 @@ public class MainUI extends JFrame{
     TableColumnModel columns =  tableDataAbsensi.getColumnModel();
     columns.getColumn(0).setMinWidth(15);
     columns.getColumn(3).setMinWidth(10);
+  }
 
+  private void createTableRekapitulasi() {
+    Object[][] data = {
+            {"fisika", "2", "3", "3"},
+            {"PBO", "3", "3", "3"},
+            {"kalkulus", "5", "5", "5"}
+    };
+    // Object[][] data = (Object[][]) getData();
+
+    // set table
+    tableRekapitulasi.setModel(new DefaultTableModel(
+            data,
+            new String[] {"mata kuliah", "hadir", "izin", "alpha"} // nama column
+    ));
+
+    TableColumnModel columns =  tableRekapitulasi.getColumnModel();
+    columns.getColumn(0).setMinWidth(15);
+    columns.getColumn(3).setMinWidth(10);
   }
 
   public JPanel getMainPanel() {

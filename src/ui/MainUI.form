@@ -181,7 +181,10 @@
               <component id="d146" class="javax.swing.JTable" binding="tableDataAbsensi">
                 <constraints/>
                 <properties>
+                  <intercellSpacing width="5" height="5"/>
                   <preferredScrollableViewportSize width="900" height="400"/>
+                  <rowHeight value="20"/>
+                  <rowMargin value="5"/>
                 </properties>
               </component>
             </children>
@@ -196,46 +199,90 @@
           <text value="Daftar Absensi"/>
         </properties>
       </component>
-      <grid id="9a6db" binding="rekapitulasiPanel" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="9a6db" binding="rekapitulasiPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="10" left="10" bottom="10" right="10"/>
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="4" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="280" height="200"/>
+          </grid>
         </constraints>
         <properties/>
         <border type="line">
           <color color="-9211021"/>
         </border>
         <children>
-          <component id="f38e1" class="javax.swing.JButton" binding="button3" default-binding="true">
+          <component id="84917" class="javax.swing.JLabel">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="nama"/>
             </properties>
           </component>
-          <component id="8eafb" class="javax.swing.JButton" binding="button1" default-binding="true">
+          <component id="57b64" class="javax.swing.JComboBox" binding="comboBoxNamaRekap">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <model>
+                <item value="-pilih-"/>
+                <item value="aco"/>
+                <item value="budi"/>
+                <item value="joni"/>
+              </model>
             </properties>
           </component>
-          <component id="f527d" class="javax.swing.JButton" binding="button2" default-binding="true">
+          <component id="dd517" class="javax.swing.JButton" binding="rekapButton" default-binding="true">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="rekap "/>
             </properties>
           </component>
-          <component id="209df" class="javax.swing.JButton" binding="button4" default-binding="true">
+          <scrollpane id="b934">
             <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="bc33e" class="javax.swing.JTable" binding="tableRekapitulasi">
+                <constraints/>
+                <properties>
+                  <rowHeight value="20"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="f4893" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="jenis rekap"/>
+            </properties>
+          </component>
+          <component id="c2584" class="javax.swing.JComboBox" binding="comboBoxJenisRekap">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="-pilih-"/>
+                <item value="mingguan"/>
+                <item value="bulanan"/>
+              </model>
+            </properties>
+          </component>
+          <component id="96005" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <model>
+                <item value="-pilih-"/>
+              </model>
             </properties>
           </component>
         </children>
