@@ -34,24 +34,31 @@ public class MainUI extends JFrame{
   private JButton rekapButton;
   private JTable tableRekapitulasi;
   private JComboBox comboBoxJenisRekap;
-  private JComboBox comboBox1;
+  private JComboBox comboBoxRekap;
 
   private boolean databaru;
   private final Koneksi koneksi = new Koneksi();
 
-  private Object getData() {
+
+  public JPanel getMainPanel() {
+    return mainPanel;
+  }
+
+
+  private Object getDataAbsensi() {
     try {
       Connection conn = koneksi.getConnect();
       Statement statement = conn.createStatement();
       ResultSet result = statement.executeQuery("select * from t_mahasiswa");
       DefaultTableModel model = (DefaultTableModel) tableDataAbsensi.getModel();
-      System.out.println(model);
+      // System.out.println(model);
 
       model.setRowCount(0);  // reset data table
 
-      String dataAbsensi[][] = new String[24][5]; // 24 jumlah row, 5 jumlah column
+      String dataAbsensi[][] = new String[100][5]; // 100 jumlah row, 5 jumlah column
+
       int i = 0;
-      while(result.next()) {
+      while(result.next()) {  // looping untuk mengisi data dari tabel ke array
         String id = result.getString("id");
         String nama = result.getString("nama");
         String mata_kuliah = result.getString("mata_kuliah");
@@ -70,21 +77,69 @@ public class MainUI extends JFrame{
 
     } catch (SQLException e) {
       e.printStackTrace();
+      return "ada yang error saat query data absensi ke database";
     }
-    return "";
   }
+
+
+  private Object getDataRekap(String nama, String jenisRekap, String satuanRekap) {
+    try {
+      Connection conn = koneksi.getConnect();
+      Statement statement = conn.createStatement();
+      String sql = "select mata_kuliah as mk, find_in_set('hadir', keterangan) as hadir, find_in_set('izin', keterangan) as izin, find_in_set('alpha', keterangan) as alpha FROM t_mahasiswa WHERE nama = '%s' and pertemuan = '%s'";
+      sql = String.format(
+              sql,
+              nama,
+              satuanRekap
+      );
+      ResultSet result = statement.executeQuery(sql);
+      DefaultTableModel model = (DefaultTableModel) tableDataAbsensi.getModel();
+
+      model.setRowCount(0);  // reset data table
+
+      String dataRekap[][] = new String[3][4]; // 3 jumlah row, 4 jumlah column
+
+      int i = 0;
+      while(result.next()) {
+        String mata_kuliah = result.getString("mk");
+        String hadir = result.getString("hadir");
+        String izin = result.getString("izin");
+        String alpha = result.getString("alpha");
+
+        dataRekap[i][0] = mata_kuliah;
+        dataRekap[i][1] = hadir;
+        dataRekap[i][2] = izin;
+        dataRekap[i][3] = alpha;
+
+        i++;
+      }
+      return dataRekap;
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return "ada yang error saat rekap data dari database";
+    }
+  }
+
 
   // constructor
   public MainUI() {
     createTableAbsensi();
-    createTableRekapitulasi();
 
-    // event ketika pilih nama
+    // event ketika pilih nama (input absensi panel)
     namaField.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
         System.out.println("berhasil");
         generateComboboxMK();
+      }
+    });
+
+    // event ketika pilih nama (rekapitulasi panel)
+    comboBoxJenisRekap.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        generateComboboxRekapitulasi();
       }
     });
 
@@ -119,7 +174,6 @@ public class MainUI extends JFrame{
             pertemuanField.setSelectedItem(sql.getString("pertemuan"));
             ketField.setSelectedItem(sql.getString("keterangan"));
           }
-
         } catch (SQLException ex) {
           ex.printStackTrace();
         }
@@ -130,10 +184,6 @@ public class MainUI extends JFrame{
     buttonSimpan.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
-
-        System.out.println("id : " + idField.getText());
-        System.out.println("nama : " + namaField.getSelectedItem());
-
         if(databaru) {
           try {
             String sql = "insert into t_mahasiswa values ('%s', '%s', '%s', '%s', '%s')";
@@ -210,31 +260,39 @@ public class MainUI extends JFrame{
         createTableAbsensi(); // update data di tabel
       }
     });
+
+    // event tombol rekap
+    rekapButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        String nama = (String) comboBoxNamaRekap.getSelectedItem();
+        String jenisRekap = (String) comboBoxJenisRekap.getSelectedItem();
+        String satuanRekap = (String) comboBoxRekap.getSelectedItem();
+        createTableRekapitulasi(nama, jenisRekap, satuanRekap);
+        createTableAbsensi();
+      }
+    });
   }
 
   private void regenerateAllCombobox() {
-    // id field
     idField.setText("");
 
-    // combobox Nama
     namaField.removeAllItems();
     String itemNama[] = {"-pilih-", "aco", "budi", "joni"};
     namaField.setModel(new DefaultComboBoxModel(itemNama));
 
-    // combobox MK
     mkField.removeAllItems();
     mkField.addItem("-pilih-");
 
-    // combobox keterangan
     ketField.removeAllItems();
     String itemKet[] = {"-pilih-", "hadir", "alpha", "izin"};
     ketField.setModel(new DefaultComboBoxModel(itemKet));
 
-    // combobox
     pertemuanField.removeAllItems();
     String itemPertemuan[] = {"-pilih-", "1", "2", "3", "4", "5", "6", "7", "8"};
     pertemuanField.setModel(new DefaultComboBoxModel(itemPertemuan));
   }
+
 
   private void createTableAbsensi() {
 //    Object[][] data = {
@@ -242,28 +300,24 @@ public class MainUI extends JFrame{
 //            {234, "budi", "PBO", 1, "alpha"},
 //            {345, "aco", "web programming", 2, "sakit"}
 //    };
-    Object[][] data = (Object[][]) getData();
+    Object[][] data = (Object[][]) getDataAbsensi();
 
     // set table
     tableDataAbsensi.setModel(new DefaultTableModel(
             data,
             new String[] {"ID", "nama", "mata kuliah", "pertemuan" ,"keterangan"} // nama column
     ));
-
-    databaru = true;//
-
-    TableColumnModel columns =  tableDataAbsensi.getColumnModel();
-    columns.getColumn(0).setMinWidth(15);
-    columns.getColumn(3).setMinWidth(10);
+    databaru = true;
   }
 
-  private void createTableRekapitulasi() {
-    Object[][] data = {
-            {"fisika", "2", "3", "3"},
-            {"PBO", "3", "3", "3"},
-            {"kalkulus", "5", "5", "5"}
-    };
-    // Object[][] data = (Object[][]) getData();
+
+  private void createTableRekapitulasi(String nama, String jenisRekap, String satuanRekap) {
+//    Object[][] data = {
+//            {"fisika", "1", "0", "0"},
+//            {"PBO", "1", "0", "0"},
+//            {"kalkulus", "0", "0", "1"}
+//    };
+     Object[][] data = (Object[][]) getDataRekap(nama, jenisRekap, satuanRekap);
 
     // set table
     tableRekapitulasi.setModel(new DefaultTableModel(
@@ -276,11 +330,8 @@ public class MainUI extends JFrame{
     columns.getColumn(3).setMinWidth(10);
   }
 
-  public JPanel getMainPanel() {
-    return mainPanel;
-  }
 
-  private void generateComboboxMK(){
+  private void generateComboboxMK () {
     //    daftar mk masing2 mahasiswa
     String mkBudi[] = {"kalkulus", "PBO", "web programming"};
     String mkAco[] = {"kalkulus", "fisika", "PBO"};
@@ -300,6 +351,26 @@ public class MainUI extends JFrame{
         break;
       case 3:
           mkField.setModel(new DefaultComboBoxModel(mkJoni));
+        break;
+    }
+  }
+
+
+  private void generateComboboxRekapitulasi() {
+    String[] rekapMingguanItems = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    String[] rekapBulananItems = {"1", "2"};
+
+    comboBoxRekap.removeAllItems(); // hapus semua items/options
+
+    switch (comboBoxJenisRekap.getSelectedIndex()) {
+      case 0:
+        System.out.println("tidak ada yang dipilih");
+        break;
+      case 1:
+        comboBoxRekap.setModel(new DefaultComboBoxModel(rekapMingguanItems));
+        break;
+      case 2:
+        comboBoxRekap.setModel(new DefaultComboBoxModel(rekapBulananItems));
         break;
     }
   }
