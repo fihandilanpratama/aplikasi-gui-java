@@ -86,12 +86,26 @@ public class MainUI extends JFrame{
     try {
       Connection conn = koneksi.getConnect();
       Statement statement = conn.createStatement();
-      String sql = "select mata_kuliah as mk, find_in_set('hadir', keterangan) as hadir, find_in_set('izin', keterangan) as izin, find_in_set('alpha', keterangan) as alpha FROM t_mahasiswa WHERE nama = '%s' and pertemuan = '%s'";
-      sql = String.format(
-              sql,
-              nama,
-              satuanRekap
-      );
+      String sql = "";
+      switch (jenisRekap) {
+        case "mingguan":
+          sql = "select mata_kuliah as mk, find_in_set('hadir', keterangan) as hadir, find_in_set('izin', keterangan) as izin, find_in_set('alpha', keterangan) as alpha FROM t_mahasiswa WHERE nama = '%s' and pertemuan = '%s'";
+          sql = String.format(
+                  sql,
+                  nama,
+                  satuanRekap
+          );
+          break;
+        case "bulanan":
+          if(satuanRekap == "1") {  // bulan 1
+            sql = "SELECT mata_kuliah as mk, sum(find_in_set('hadir', keterangan)) as 'hadir', sum(find_in_set('izin', keterangan)) as izin, sum(find_in_set('alpha', keterangan)) as alpha FROM t_mahasiswa WHERE nama = '%s' and pertemuan >= 1 AND pertemuan <= 4 GROUP BY mk";
+          } else {  // bulan 2
+            sql = "SELECT mata_kuliah as mk, sum(find_in_set('hadir', keterangan)) as 'hadir', sum(find_in_set('izin', keterangan)) as izin, sum(find_in_set('alpha', keterangan)) as alpha FROM t_mahasiswa WHERE nama = '%s' and pertemuan >= 5 AND pertemuan <= 8 GROUP BY mk";
+          }
+          sql = String.format(sql, nama);
+          break;
+      }
+
       ResultSet result = statement.executeQuery(sql);
       DefaultTableModel model = (DefaultTableModel) tableDataAbsensi.getModel();
 
